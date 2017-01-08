@@ -1,0 +1,12 @@
+FROM since92/dl:gpu-cuda8.0-cudnn5.0-devel 
+MAINTAINER m<since92x@gmail.com.com>
+COPY opencv.tar.bz2 /root/
+RUN sed -i 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//http:\/\/mirrors\.163\.com\/ubuntu\//g' /etc/apt/sources.list && \ 
+	apt-get update && apt-get install -y libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev \
+	libtbb2 libtbb-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev && \
+	cd /root/ && tar -jxvf opencv.tar.bz2 && rm opencv.tar.bz2 && mkdir -p opencv/build/ 
+WORKDIR /root/opencv/build
+RUN cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local .. && \
+	make && make install && ldconfig
+WORKDIR /root
+
